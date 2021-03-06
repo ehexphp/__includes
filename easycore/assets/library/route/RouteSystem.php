@@ -216,7 +216,8 @@ class RouteRequest
         $this->files = isset($_FILES) ? $_FILES : [];
         $this->cookies = $_COOKIE;
         $x_requested_with = isset($this->headers['x_requested_with']) ? $this->headers['x_requested_with'] : false;
-        $this->ajax = $x_requested_with === 'XMLHttpRequest';
+
+        $this->ajax = $x_requested_with === 'XMLHttpRequest' || String1::startsWith($this->path, '/api/');
     }
 
     /**
@@ -532,9 +533,7 @@ class RouteSystem
         $this->req->path = rtrim($wanted_url, '/').'/';
         @defined('URL') || @define('URL', $req->url, TRUE);
         // middleware
-        $isUrl = strtolower($this->req->path);
-        $isAjax = $this->req->ajax || String1::startsWith($isUrl, '/api/');
-        if(!Config1::onMiddleware($this->req, $isUrl, $isAjax)) die(json_encode(ResultObject1::falseMessage('Forbidden: Middleware Denied!', 403)));
+        if(!Config1::onMiddleware($this->req)) die(json_encode(ResultObject1::falseMessage('Forbidden: Middleware Denied!', 403)));
     }
 
     /**
@@ -1067,6 +1066,15 @@ class RouteSystem
         return $this;
     }
 
+    /**
+     * Get the dashboard route. This can be modified in the .config onRoute $route->fixed field.
+     * @param null $default
+     * @return string
+     */
+    function getDashboardRoute($default = null){
+        return String1::isset_or($this->fixed['dashboard_route'], $default);
+    }
+
 
     /**
      * Run and get a response.
@@ -1078,7 +1086,7 @@ class RouteSystem
 
 
         // is maintenance mode
-        if( Config1::MAINTENANCE_MODE ){
+        if( Config1::MAINTENANCE_MODE && !is_debug_mode()){
             if(isset($this->fixed['maintenance']) && view_exists($this->fixed['maintenance'])) return view($this->fixed['maintenance']);
             else die('<div align="center" style="padding:50px;"><h1>Site Under Maintenance</h1><h5>Error! Maintenance View Not Found <hr/> '.$this->fixed['maintenance'].'</h5></div>');
         }

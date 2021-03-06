@@ -47,20 +47,12 @@ function framework_info(){
         'version'=>'2.0',
         'website'=>'https://ehex.xamtax.com',
         'author'=>[
-            'name'=>'Samson Iyanu',
+            'name'=>'Samson Oyetola',
             'alias'=>'Samtax',
-            'email'=>'samsoniyanu@hotmail.com',
+            'email'=>'hello@samsonoyetola.com',
             'website'=>'https://xamtax.com',
         ],
     ]);
-}
-
-
-function pre($arr,$them=1){
-    switch ($them) { default:    $color='#2295bc'; $background='#e4e7e7'; break; }?>
-    <pre style="direction: ltr;background:<?= $background;?>;color:<?= $color;?>;
-    max-width: 90%;margin: 30px auto;overflow:auto;
-    font-family: Monaco,Consolas, 'Lucida Console',monospace;font-size: 16px;padding: 20px;"><?php print_r($arr); echo "</pre>";
 }
 
 /**

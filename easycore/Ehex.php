@@ -208,7 +208,8 @@ class ResultObject1{
     function getData(){ return ( $this->data ); }
 
     static function data($data = null){ return static::make(!!$data, method_exists($data, 'message')? $data->message(): '', $data, $data?200:400);}
-    static function falseMessage($message = '', $code = 400){ return new self(false, $message, $message, $code);}
+    static function falseMessage($message = '', $code = 400){ return new self(false, $message, null, $code);}
+    static function trueMessage($message = '', $code = 200){ return new self(true, $message, null, $code);}
     static function trueData($data = null){ return new self(true, is_string($data)? $data: "Done", $data); }
     static function make($m_status = true, $m_message="", $m_data=null, $code = 200) { return new self($m_status, $m_message, $m_data, $code); }
 
@@ -661,7 +662,7 @@ class ServerRequest1{
 
 
         // run the method and function
-        if(strpos($lookupFunction, $breakSymbol) > 0){
+        if($breakSymbol && strpos($lookupFunction, $breakSymbol) > 0){
             try{
                 $class_and_method = explode($breakSymbol, $functionAndClass);
                 $callAs = (($breakSymbol == '@' || $breakSymbol == '.')? (new $class_and_method[0]): $class_and_method[0]);
@@ -680,13 +681,16 @@ class ServerRequest1{
                 die(self::serverErrorAsResultObject1($functionAndClass, $parameterList, 'method_call_error-'.$exception->getMessage()));
             }
         }else{
-            // insert function and param // Only Method
-            $request = self::request();
-            $request['request'] = String1::isset_or($request['request'], $request);
-            $request['args'] = String1::isset_or($request['args'], $parameterList);
-            $parameterList = Class1::getMethodParams($functionAndClass, null, $request, false);
-
-            try{ return call_user_func_array($functionAndClass,  $parameterList); }catch (Exception $exception) {  die(self::serverErrorAsResultObject1($functionAndClass, $parameterList, 'function_call_error-'.$exception->getMessage())); }
+            try{
+                // insert function and param // Only Method
+                $request = self::request();
+                $request['request'] = String1::isset_or($request['request'], $request);
+                $request['args'] = String1::isset_or($request['args'], $parameterList);
+                $parameterList = Class1::getMethodParams($functionAndClass, null, $request, false);
+                return call_user_func_array($functionAndClass,  $parameterList);
+            }catch (Exception $exception) {
+                die(self::serverErrorAsResultObject1($functionAndClass, $parameterList, 'function_call_error-'.$exception->getMessage()));
+            }
         }
     }
 
@@ -756,7 +760,7 @@ class ServerRequest1{
         // check if class::method exist in token bypass session or class::$CLF_BYPASS_TOKEN_LIST = [] consist of bypassable method
         if(!self::validateCLFAndBypassedToken($functionName, $breakSymbol)){
             // is auth required
-            $className = explode($breakSymbol, $functionName)[0];
+            $className = $breakSymbol? explode($breakSymbol, $functionName)[0]: null;
 
             // check if serverRequest class is called and not method
             if($enableApiAuth) {
@@ -3984,7 +3988,7 @@ class Framework1{
      * Is Framework ehex
      * @return bool|Config1|mixed
      */
-    static function Ehex(){
+    static function isEhex(){
         if(function_exists('framework_info()') && (framework_info()['name'] === 'ehex') ) return framework_info();
         return false;
     }
@@ -4002,7 +4006,7 @@ class MySql1{
      * @return string
      */
     static function mysqli_real_escape($value, $DB_CONNECTION = null){
-        if(!$DB_CONNECTION && Framework1::Ehex()){
+        if(!$DB_CONNECTION && Framework1::isEhex()){
             Db1::open();
             $DB_CONNECTION = Db1::$DB_HANDLER;
         }
@@ -5291,14 +5295,6 @@ class Url1{
         return strip_tags($html);
     }
 
-    static function getPageAssets($siteUrl = 'https://xamtax.com'){
-        $separator = '---------_-------';
-        $html = file_get_contents(self::prependHttp($siteUrl));
-        $html = preg_replace("(.css)+|(.js)+|(.html)+|(.png)+|(.gif)+(.jpg)+|(.jpeg)+", $separator, $html );
-        return explode($separator, strip_tags($html));
-    }
-
-
 
     /**
      * cURL constructor.
@@ -5563,7 +5559,7 @@ class Number1{
 
 
     /**
-     * @param array ...$list
+     * @param array $list
      * @return float (use when you have more than one percentage to deal with);
      * e.g (find average percentage of 60%,40%. just  convert the two number to
      * decimal by dividing them with 100, so u get 0.6 & 0.4, then add the two

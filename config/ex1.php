@@ -404,6 +404,7 @@ class exRoute1{
     static function post($name, $action){  return route()->post($name, $action); }
     static function view($name, $viewName, $dataParam = []){ return route()->view($name, $viewName, $dataParam); }
     static function fixed($arrayList = ['error404'=>'pages.common.error404', 'maintenance'=>'layouts.coming_soon.index']){ return route()->fixed($arrayList); }
+    static function getDashboardRoute($default = null){ return route()->getDashboardRoute($default); }
 
     /**
      * Use Model Controller To Fill Route Name Automatically, Your class must implement Controller1RouteInterface
@@ -432,16 +433,6 @@ class exRoute1{
      * @return Route|RouteSystem|string
      */
     static function getRoutes(){ return route(); }
-
-    /**
-     * Make Default Route Like login, register e.t.c
-     * @param string $onLoginFound_redirectTo
-     * @param array $errorMessage
-     * @see make_default_route
-     */
-    static function makeDefault($onLoginFound_redirectTo = '/', $errorMessage = ['Welcome Back', 'You have Logged In Already, Please Logout out first and try again', 'error']){
-        make_default_route($onLoginFound_redirectTo, $errorMessage);
-    }
 
     /**
      * Is Certain Route name Exists

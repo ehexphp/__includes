@@ -195,25 +195,12 @@
 
 
 
+
     /**
      * @param $name
      * @param $actionFunction
      */
     function make_route($name, $actionFunction) { global $route; $route->any($name, $actionFunction); }
-
-    /**
-     * @param string $onLoginFound_redirectTo
-     * @param array $errorMessage
-     */
-    function make_default_route($onLoginFound_redirectTo = '/', $errorMessage = ['Welcome Back', 'You have Logged In Already, Please Logout out first and try again', 'error']) { //routes()['dashboard']
-        global $route;
-        $route->view('/forgot_password', 'pages.auth.forgot_password');
-        $route->view('/reset_password', 'pages.auth.reset_password');
-        $route->any('/register',        function() use ($onLoginFound_redirectTo, $errorMessage){ if(User::isLoginExist()){  Url1::redirect(url($onLoginFound_redirectTo), $errorMessage); } else { echo view('pages.auth.register'); } });
-        $route->any('/login',           function() use ($onLoginFound_redirectTo, $errorMessage){ if(User::isLoginExist()){  Url1::redirect(url($onLoginFound_redirectTo), $errorMessage); } else { echo view('pages.auth.login'); } });
-        $route->any('/logout',          function() { return User::logout(); });
-        $route->get('/delete_account',  function() { (User::getLogin(false))->delete(); });
-    }
 
 
     api_and_form_default_route();

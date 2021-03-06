@@ -47,7 +47,7 @@
             if(String1::contains('many connections', strtolower($errorMessage))){
                 Session1::setStatus('Reload Page', 'Multiple connection to Db, Reload to re-connect');
             }else{
-                pre(['<hr/>Database Connection Error..., <hr/>Solution <hr/>[1> Verity Model Query. <hr/>[2> Run Db1::databaseCreate() in "config onDebug(){...}" and Refresh!]<hr/>'. $errorMessage]);
+                Console1::println(['<hr/>Database Connection Error..., <hr/>Solution <hr/>[1> Verity Model Query. <hr/>[2> Run Db1::databaseCreate() in "config onDebug(){...}" and Refresh!]<hr/>'. $errorMessage]);
             }
         };
 

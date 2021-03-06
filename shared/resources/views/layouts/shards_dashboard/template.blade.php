@@ -31,14 +31,14 @@
     <meta name="theme-color" content="#fbfbfb" />
 
 
-    {{--<!-- Unpoly files -->
+    <!-- Unpoly files -->
     <script src="https://unpkg.com/unpoly@0.60.3/dist/unpoly.min.js" integrity="sha384-d0dZGRjXkcYffI0McmqJSm3er7T9PL52pR0NaeTLevHLCZ8ioS9xBvRa82r3inPZ" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/unpoly@0.60.3/dist/unpoly.min.css" integrity="sha384-Au6LjS9fxDpwn3+26YmukmOumZUmryd8ONenkVIoH4eEPH1tACqLsVfqz9tBrvQy" crossorigin="anonymous">
     <!-- Unpoly's Bootstrap integration -->
     <script src="https://unpkg.com/unpoly@0.60.3/dist/unpoly-bootstrap3.min.js" integrity="sha384-lMc46x3hWx64BAq3vrNJ8iw+OxCsmd7wjW0s6R5OQ1hRS7wM/j89SjW/42xU2pRN" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://unpkg.com/unpoly@0.60.3/dist/unpoly-bootstrap3.min.css" integrity="sha384-oJV80YWkwBRAQFFmBo1hi8Wrh2PkisM2RttMUv4cvHABmxpez4yrECLKvs07ayJW" crossorigin="anonymous">
     <!-- Unpoly's Custom style -->
-    <style>.up-modal-content{padding:10px;}</style>--}}
+    <style>.up-modal-content{padding:10px;}</style>
 
 
     <!-- Tags Input-->
@@ -83,9 +83,6 @@
 <div class="container-fluid">
     <div class="row">
 
-
-
-
         <!-- Main Sidebar -->
         @if(!isset_or($page_disable_sidebar))
             <aside class="main-sidebar col-12 col-md-3 col-lg-2 px-0" style="z-index:1000">
@@ -93,7 +90,7 @@
                 <!-- logo-->
                     <div class="main-navbar">
                         <nav class="navbar align-items-stretch navbar-light bg-white flex-md-nowrap border-bottom p-0">
-                            <a class="navbar-brand w-100 mr-0" href="{{ url('/dashboard') }}" style="line-height: 25px;"> <div class="d-table m-auto"> <img style="height:40px; width:40px;" id="main-logo" class="d-inline-block align-top mr-1" src="{{ Dashboard::logo() }}" alt="{{ Config1::APP_TITLE}} Dashboard"></div> </a>
+                            <a class="navbar-brand w-100 mr-0" href="{{ url('/') }}" style="line-height: 25px;"> <div class="d-table m-auto"> <img style="height:40px; width:40px;" id="main-logo" class="d-inline-block align-top mr-1" src="{{ Dashboard::logo() }}" alt="{{ Config1::APP_TITLE}} Dashboard"></div> </a>
                             <a class="toggle-sidebar d-sm-inline d-md-none d-lg-none"><i class="fa fa-bars"></i></a>
                         </nav>
                     </div>
@@ -131,7 +128,7 @@
                                                 $link = Url1::buildParameter(['menu_category'=>$menuCategory], $link);
                                                 $menu_name = 'menu_'.$loop->parent->index.'_'.$loop->index;
                                             ?>
-                                            <div class="nav-item"><a id="{{ $menu_name }}"></a><a up-target="main" class="nav-link {{ Url1::ifUrlEquals($link, 'active') }}" href="{{ $link }}#{{ $menu_name }}">{!! $name !!}</a></div>
+                                            <div class="nav-item"><a id="{{ $menu_name }}"></a><a up-target=".main-content-container" class="nav-link {{ Url1::ifUrlEquals($link, 'active') }}" href="{{ $link }}#{{ $menu_name }}">{!! $name !!}</a></div>
                                         @endforeach
                                     </div>
                                 </li>
@@ -243,15 +240,6 @@
             <!-- Page Content -->
             @yield('page_content')
 
-
-
-
-
-
-
-
-
-
             @section('page_footer')
                 <footer class="main-footer d-flex p-2 px-3 bg-white border-top">
                     <ul class="nav">
@@ -267,6 +255,7 @@
                     @endif
                 </footer>
             @show
+
         </main>
     </div>
 </div>
